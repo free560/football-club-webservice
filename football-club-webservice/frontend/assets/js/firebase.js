@@ -10,7 +10,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "VOTRE_API_KEY",
+  apiKey: "AIzaSyCdjf45ynsEtBJhz1_ttqN83FpHp6AORio",
   authDomain: "footballclubserviceweb.firebaseapp.com",
   projectId: "footballclubserviceweb",
   storageBucket: "footballclubserviceweb.firebasestorage.app",
