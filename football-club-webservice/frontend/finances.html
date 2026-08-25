@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Finances</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+
+    <header class="bg-blue-900 text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+
+            <h1 class="text-2xl font-bold">
+                💰 Gestion des Finances
+            </h1>
+
+            <a href="dashboard.html"
+                class="bg-white text-blue-900 px-4 py-2 rounded-lg">
+                Dashboard
+            </a>
+
+        </div>
+    </header>
+
+    <div class="container mx-auto p-6">
+
+        <div class="mb-6">
+            <h2 class="text-3xl font-bold">
+                Gestion Financière du Club
+            </h2>
+
+            <p class="text-gray-500">
+                Enregistrer les recettes et les dépenses.
+            </p>
+        </div>
+
+        <!-- Formulaire -->
+
+        <div class="bg-white p-6 rounded-2xl shadow-lg">
+
+            <h3 class="text-xl font-semibold mb-4">
+                Nouvelle Opération
+            </h3>
+
+            <form id="financeForm">
+
+                <div class="grid md:grid-cols-2 gap-4">
+
+                    <select
+                        id="type"
+                        required
+                        class="border rounded-lg p-3">
+
+                        <option value="">
+                            Type d'opération
+                        </option>
+
+                        <option value="Recette">
+                            Recette
+                        </option>
+
+                        <option value="Dépense">
+                            Dépense
+                        </option>
+
+                    </select>
+
+                    <input
+                        id="categorie"
+                        type="text"
+                        placeholder="Catégorie"
+                        required
+                        class="border rounded-lg p-3">
+
+                    <input
+                        id="montant"
+                        type="number"
+                        placeholder="Montant"
+                        required
+                        class="border rounded-lg p-3">
+
+                    <input
+                        id="date"
+                        type="date"
+                        required
+                        class="border rounded-lg p-3">
+
+                    <textarea
+                        id="description"
+                        rows="3"
+                        placeholder="Description"
+                        class="border rounded-lg p-3 md:col-span-2"></textarea>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="mt-5 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+
+                    Ajouter Opération
+
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- Tableau -->
+
+        <div class="bg-white p-6 rounded-2xl shadow-lg mt-8">
+
+            <h3 class="text-xl font-semibold mb-4">
+                Historique Financier
+            </h3>
+
+            <div class="overflow-x-auto">
+
+                <table class="min-w-full border">
+
+                    <thead class="bg-blue-900 text-white">
+
+                        <tr>
+                            <th class="border p-3">Type</th>
+                            <th class="border p-3">Catégorie</th>
+                            <th class="border p-3">Montant</th>
+                            <th class="border p-3">Date</th>
+                            <th class="border p-3">Description</th>
+                            <th class="border p-3">Actions</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="financesTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="module" src="assets/js/finances.js"></script>
+
+</body>
+
+</html>

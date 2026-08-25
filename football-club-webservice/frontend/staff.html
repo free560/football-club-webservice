@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion du Staff</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Header -->
+    <header class="bg-blue-900 text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+
+            <h1 class="text-2xl font-bold">
+                👔 Gestion du Staff
+            </h1>
+
+            <a href="dashboard.html"
+                class="bg-white text-blue-900 px-4 py-2 rounded-lg font-medium hover:bg-gray-200">
+                Dashboard
+            </a>
+
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6">
+
+        <!-- Titre -->
+        <div class="mb-6">
+            <h2 class="text-3xl font-bold text-gray-800">
+                Membres du Staff
+            </h2>
+
+            <p class="text-gray-500">
+                Ajouter, afficher et supprimer les membres du staff du club.
+            </p>
+        </div>
+
+        <!-- Formulaire -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+
+            <h3 class="text-xl font-semibold mb-4">
+                Ajouter un membre
+            </h3>
+
+            <form id="staffForm">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div>
+                        <label class="block mb-2 font-medium">
+                            Nom
+                        </label>
+
+                        <input
+                            id="nom"
+                            type="text"
+                            required
+                            placeholder="Nom"
+                            class="w-full border rounded-lg p-3">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium">
+                            Prénom
+                        </label>
+
+                        <input
+                            id="prenom"
+                            type="text"
+                            required
+                            placeholder="Prénom"
+                            class="w-full border rounded-lg p-3">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium">
+                            Fonction
+                        </label>
+
+                        <select
+                            id="fonction"
+                            class="w-full border rounded-lg p-3">
+
+                            <option value="">Choisir</option>
+
+                            <option>Président</option>
+                            <option>Vice-Président</option>
+                            <option>Manager</option>
+                            <option>Entraîneur</option>
+                            <option>Assistant Entraîneur</option>
+                            <option>Médecin</option>
+                            <option>Comptable</option>
+                            <option>Secrétaire</option>
+                            <option>Préparateur Physique</option>
+
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium">
+                            Téléphone
+                        </label>
+
+                        <input
+                            id="telephone"
+                            type="text"
+                            placeholder="+257..."
+                            class="w-full border rounded-lg p-3">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium">
+                            Email
+                        </label>
+
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="email@gmail.com"
+                            class="w-full border rounded-lg p-3">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium">
+                            Salaire
+                        </label>
+
+                        <input
+                            id="salaire"
+                            type="number"
+                            placeholder="Salaire"
+                            class="w-full border rounded-lg p-3">
+                    </div>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg">
+
+                    Ajouter Staff
+
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- Tableau -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mt-8">
+
+            <div class="flex justify-between items-center mb-4">
+
+                <h3 class="text-xl font-semibold">
+                    Liste du Staff
+                </h3>
+
+                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                    Firebase Firestore
+                </span>
+
+            </div>
+
+            <div class="overflow-x-auto">
+
+                <table class="min-w-full border border-gray-300">
+
+                    <thead class="bg-blue-900 text-white">
+
+                        <tr>
+                            <th class="p-3 border">Nom</th>
+                            <th class="p-3 border">Prénom</th>
+                            <th class="p-3 border">Fonction</th>
+                            <th class="p-3 border">Téléphone</th>
+                            <th class="p-3 border">Email</th>
+                            <th class="p-3 border">Salaire</th>
+                            <th class="p-3 border">Actions</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="staffTable">
+
+                        <!-- Chargé automatiquement depuis Firebase -->
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="module" src="assets/js/staff.js"></script>
+
+</body>
+
+</html>

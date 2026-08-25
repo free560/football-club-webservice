@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Football Club</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+
+    <nav class="bg-blue-900 text-white shadow-lg">
+
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+
+            <h1 class="text-2xl font-bold">
+                ⚽ Football Club Management
+            </h1>
+
+            <div class="space-x-4">
+
+                <a href="joueurs.html" class="hover:text-yellow-300">Joueurs</a>
+
+                <a href="staff.html" class="hover:text-yellow-300">Staff</a>
+
+                <a href="equipes.html" class="hover:text-yellow-300">Équipes</a>
+
+                <a href="matchs.html" class="hover:text-yellow-300">Matchs</a>
+
+                <a href="stades.html" class="hover:text-yellow-300">Stades</a>
+
+                <a href="sponsors.html" class="hover:text-yellow-300">Sponsors</a>
+
+                <a href="finances.html" class="hover:text-yellow-300">Finances</a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <!-- Contenu -->
+
+    <div class="container mx-auto p-6">
+
+        <h2 class="text-3xl font-bold mb-8">
+
+            📊 Tableau de Bord
+
+        </h2>
+
+        <div class="grid md:grid-cols-4 gap-6">
+
+            <div class="bg-white rounded-xl shadow p-6">
+                <h3 class="text-gray-500">Joueurs</h3>
+                <p id="totalJoueurs" class="text-4xl font-bold text-blue-600">0</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-6">
+                <h3 class="text-gray-500">Staff</h3>
+                <p id="totalStaff" class="text-4xl font-bold text-green-600">0</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-6">
+                <h3 class="text-gray-500">Équipes</h3>
+                <p id="totalEquipes" class="text-4xl font-bold text-purple-600">0</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-6">
+                <h3 class="text-gray-500">Matchs</h3>
+                <p id="totalMatchs" class="text-4xl font-bold text-red-600">0</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-6">
+                <h3 class="text-gray-500">Stades</h3>
+                <p id="totalStades" class="text-4xl font-bold text-orange-600">0</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-6">
+                <h3 class="text-gray-500">Sponsors</h3>
+                <p id="totalSponsors" class="text-4xl font-bold text-pink-600">0</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-6">
+                <h3 class="text-gray-500">Recettes</h3>
+                <p id="totalRecettes" class="text-2xl font-bold text-green-700">0</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-6">
+                <h3 class="text-gray-500">Dépenses</h3>
+                <p id="totalDepenses" class="text-2xl font-bold text-red-700">0</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="module" src="assets/js/dashboard.js"></script>
+
+</body>
+
+</html>

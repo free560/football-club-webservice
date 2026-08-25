@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Équipes</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Header -->
+    <header class="bg-blue-900 text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+
+            <h1 class="text-2xl font-bold">
+                🏆 Gestion des Équipes
+            </h1>
+
+            <a href="dashboard.html"
+                class="bg-white text-blue-900 px-4 py-2 rounded-lg font-medium hover:bg-gray-200">
+                Dashboard
+            </a>
+
+        </div>
+    </header>
+
+    <!-- Contenu -->
+    <div class="container mx-auto p-6">
+
+        <!-- Titre -->
+        <div class="mb-6">
+            <h2 class="text-3xl font-bold text-gray-800">
+                Gestion des Équipes
+            </h2>
+
+            <p class="text-gray-500">
+                Ajouter, afficher et supprimer les équipes du club.
+            </p>
+        </div>
+
+        <!-- Formulaire -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+
+            <h3 class="text-xl font-semibold mb-4">
+                Ajouter une équipe
+            </h3>
+
+            <form id="equipeForm">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div>
+                        <label class="block mb-2 font-medium">
+                            Nom de l'équipe
+                        </label>
+
+                        <input
+                            id="nom"
+                            type="text"
+                            required
+                            placeholder="FC Santa Maria"
+                            class="w-full border rounded-lg p-3">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium">
+                            Ville
+                        </label>
+
+                        <input
+                            id="ville"
+                            type="text"
+                            required
+                            placeholder="Bujumbura"
+                            class="w-full border rounded-lg p-3">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium">
+                            Date de création
+                        </label>
+
+                        <input
+                            id="dateCreation"
+                            type="date"
+                            class="w-full border rounded-lg p-3">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium">
+                            Catégorie
+                        </label>
+
+                        <select
+                            id="categorie"
+                            class="w-full border rounded-lg p-3">
+
+                            <option value="">Choisir</option>
+                            <option>Senior</option>
+                            <option>Junior</option>
+                            <option>Cadet</option>
+                            <option>Minime</option>
+                            <option>Féminine</option>
+
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-2">
+
+                        <label class="block mb-2 font-medium">
+                            Description
+                        </label>
+
+                        <textarea
+                            id="description"
+                            rows="4"
+                            placeholder="Description de l'équipe..."
+                            class="w-full border rounded-lg p-3"></textarea>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg">
+
+                    Ajouter Équipe
+
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- Tableau -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mt-8">
+
+            <div class="flex justify-between items-center mb-4">
+
+                <h3 class="text-xl font-semibold">
+                    Liste des Équipes
+                </h3>
+
+                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                    Firebase Firestore
+                </span>
+
+            </div>
+
+            <div class="overflow-x-auto">
+
+                <table class="min-w-full border border-gray-300">
+
+                    <thead class="bg-blue-900 text-white">
+
+                        <tr>
+                            <th class="p-3 border">Nom</th>
+                            <th class="p-3 border">Ville</th>
+                            <th class="p-3 border">Date Création</th>
+                            <th class="p-3 border">Catégorie</th>
+                            <th class="p-3 border">Description</th>
+                            <th class="p-3 border">Actions</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="equipesTable">
+
+                        <!-- Chargé depuis Firebase -->
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="module" src="assets/js/equipes.js"></script>
+
+</body>
+
+</html>
