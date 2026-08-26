@@ -1,4 +1,3 @@
-/*
 import { auth, db } from "./firebase.js";
 
 import {
@@ -67,4 +66,3 @@ if (form) {
     });
 
 }
-*/
