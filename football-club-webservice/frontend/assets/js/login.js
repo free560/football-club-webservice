@@ -36,7 +36,7 @@ if (form) {
             alert("Connexion réussie.");
 
             window.location.href =
-                "dashboard.html";
+                "services.html";
 
         } catch (error) {
 
