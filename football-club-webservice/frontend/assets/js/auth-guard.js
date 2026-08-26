@@ -25,12 +25,10 @@ onAuthStateChanged(auth, (user) => {
             "Accès refusé : utilisateur non connecté."
         );
 
-        // Redirection vers login
         window.location.replace("login.html");
 
         return;
     }
-
 
     // --------------------------------------
     // UTILISATEUR CONNECTÉ
@@ -41,14 +39,8 @@ onAuthStateChanged(auth, (user) => {
         user.email
     );
 
-
-    // --------------------------------------
-    // AFFICHER L'EMAIL
-    // --------------------------------------
-
     const userEmail =
         document.getElementById("userEmail");
-
 
     if (userEmail) {
 
@@ -57,14 +49,8 @@ onAuthStateChanged(auth, (user) => {
 
     }
 
-
-    // --------------------------------------
-    // AFFICHER UID SI NÉCESSAIRE
-    // --------------------------------------
-
     const userUid =
         document.getElementById("userUid");
-
 
     if (userUid) {
 
