@@ -1,3 +1,4 @@
+/*
 import { auth } from "./firebase.js";
 
 import {
@@ -46,5 +47,6 @@ if (form) {
 
     });
 
-}
+} 
+*/
 
