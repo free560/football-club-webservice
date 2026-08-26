@@ -1,7 +1,6 @@
 // ==========================================
 // LOGOUT - DÉCONNEXION FIREBASE
 // ==========================================
-/*
 import { auth } from "./firebase.js";
 
 import {
