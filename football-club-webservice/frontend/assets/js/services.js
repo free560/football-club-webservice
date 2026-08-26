@@ -1,8 +1,10 @@
 import { auth, db } from "./firebase.js";
+/*
 import {
     onAuthStateChanged,
     signOut
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+*/
 import {
     collection,
     getDocs,
@@ -30,7 +32,7 @@ import {
 
 /* =========================
    AUTHENTIFICATION
-========================= */
+========================= 
 
 onAuthStateChanged(
     auth,
@@ -53,7 +55,7 @@ onAuthStateChanged(
 
     }
 );
-
+*/
 
 /* =========================
    STATISTIQUES FIRESTORE
