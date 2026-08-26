@@ -1,7 +1,6 @@
 // ==========================================
 // AUTH GUARD - PROTECTION DES PAGES
 // ==========================================
-/*
 import { auth } from "./firebase.js";
 
 import {
@@ -60,4 +59,3 @@ onAuthStateChanged(auth, (user) => {
     }
 
 });
-*/
