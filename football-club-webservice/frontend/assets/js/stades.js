@@ -1,14 +1,23 @@
-import { db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 
 import {
     collection,
     addDoc,
     getDocs,
     deleteDoc,
-    doc
+    doc,
+    query,
+    where
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-/* AJOUTER */
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+
+/* ==========================
+   AJOUTER STADE
+========================== */
 
 const form = document.getElementById("stadeForm");
 
@@ -17,6 +26,14 @@ if (form) {
     form.addEventListener("submit", async (e) => {
 
         e.preventDefault();
+
+        if (!auth.currentUser) {
+
+            alert("Veuillez vous reconnecter.");
+
+            return;
+
+        }
 
         const nom =
             document.getElementById("nom").value.trim();
@@ -39,7 +56,11 @@ if (form) {
                     ville,
                     capacite,
                     adresse,
-                    createdAt: new Date().toISOString()
+
+                    userId: auth.currentUser.uid,
+                    userEmail: auth.currentUser.email,
+
+                    createdAt: new Date()
                 }
             );
 
@@ -51,6 +72,8 @@ if (form) {
 
         } catch (error) {
 
+            console.error(error);
+
             alert(error.message);
 
         }
@@ -59,9 +82,14 @@ if (form) {
 
 }
 
-/* AFFICHER */
+
+/* ==========================
+   AFFICHER STADES
+========================== */
 
 async function chargerStades() {
+
+    if (!auth.currentUser) return;
 
     const table =
         document.getElementById("stadesTable");
@@ -70,68 +98,124 @@ async function chargerStades() {
 
     table.innerHTML = "";
 
-    const snapshot =
-        await getDocs(
-            collection(db, "stades")
+    try {
+
+        const stadesQuery = query(
+            collection(db, "stades"),
+            where(
+                "userId",
+                "==",
+                auth.currentUser.uid
+            )
         );
 
-    snapshot.forEach((documentItem) => {
+        const snapshot =
+            await getDocs(stadesQuery);
 
-        const stade =
-            documentItem.data();
+        snapshot.forEach((documentItem) => {
 
-        table.innerHTML += `
-        <tr>
+            const stade =
+                documentItem.data();
 
-            <td class="border p-3">
-                ${stade.nom || ""}
-            </td>
+            table.innerHTML += `
+            <tr>
 
-            <td class="border p-3">
-                ${stade.ville || ""}
-            </td>
+                <td class="border p-3">
+                    ${stade.nom || ""}
+                </td>
 
-            <td class="border p-3">
-                ${stade.capacite || ""}
-            </td>
+                <td class="border p-3">
+                    ${stade.ville || ""}
+                </td>
 
-            <td class="border p-3">
-                ${stade.adresse || ""}
-            </td>
+                <td class="border p-3">
+                    ${stade.capacite || ""}
+                </td>
 
-            <td class="border p-3">
+                <td class="border p-3">
+                    ${stade.adresse || ""}
+                </td>
 
-                <button
-                onclick="supprimerStade('${documentItem.id}')"
-                class="bg-red-600 text-white px-3 py-1 rounded">
+                <td class="border p-3">
 
-                Supprimer
+                    <button
+                    onclick="supprimerStade('${documentItem.id}')"
+                    class="bg-red-600 text-white px-3 py-1 rounded">
 
-                </button>
+                    Supprimer
 
-            </td>
+                    </button>
 
-        </tr>
-        `;
+                </td>
 
-    });
+            </tr>
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Erreur chargement stades :",
+            error
+        );
+
+    }
 
 }
 
-/* SUPPRIMER */
+
+/* ==========================
+   SUPPRIMER STADE
+========================== */
 
 window.supprimerStade =
-async function (id) {
+async function(id) {
 
-    if (!confirm("Supprimer ce stade ?"))
-        return;
+    const confirmation =
+        confirm("Supprimer ce stade ?");
 
-    await deleteDoc(
-        doc(db, "stades", id)
-    );
+    if (!confirmation) return;
 
-    chargerStades();
+    try {
+
+        await deleteDoc(
+            doc(db, "stades", id)
+        );
+
+        chargerStades();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+
+    }
 
 };
 
-chargerStades();
+
+/* ==========================
+   CHARGEMENT INITIAL
+========================== */
+
+onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+
+        console.log(
+            "Utilisateur connecté :",
+            user.email
+        );
+
+        chargerStades();
+
+    } else {
+
+        window.location.href =
+            "login.html";
+
+    }
+
+});

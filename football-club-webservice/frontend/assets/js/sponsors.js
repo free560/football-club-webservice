@@ -1,12 +1,18 @@
-import { db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 
 import {
     collection,
     addDoc,
     getDocs,
     deleteDoc,
-    doc
+    doc,
+    query,
+    where
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 /* ==========================
    AJOUTER SPONSOR
@@ -19,6 +25,14 @@ if (form) {
     form.addEventListener("submit", async (e) => {
 
         e.preventDefault();
+
+        if (!auth.currentUser) {
+
+            alert("Veuillez vous reconnecter.");
+
+            return;
+
+        }
 
         const nom =
             document.getElementById("nom").value.trim();
@@ -41,7 +55,11 @@ if (form) {
                     contact,
                     montant,
                     dateSignature,
-                    createdAt: new Date().toISOString()
+
+                    userId: auth.currentUser.uid,
+                    userEmail: auth.currentUser.email,
+
+                    createdAt: new Date()
                 }
             );
 
@@ -53,6 +71,8 @@ if (form) {
 
         } catch (error) {
 
+            console.error(error);
+
             alert(error.message);
 
         }
@@ -61,11 +81,14 @@ if (form) {
 
 }
 
+
 /* ==========================
    AFFICHER SPONSORS
 ========================== */
 
 async function chargerSponsors() {
+
+    if (!auth.currentUser) return;
 
     const table =
         document.getElementById("sponsorsTable");
@@ -74,70 +97,124 @@ async function chargerSponsors() {
 
     table.innerHTML = "";
 
-    const snapshot =
-        await getDocs(
-            collection(db, "sponsors")
+    try {
+
+        const sponsorsQuery = query(
+            collection(db, "sponsors"),
+            where(
+                "userId",
+                "==",
+                auth.currentUser.uid
+            )
         );
 
-    snapshot.forEach((documentItem) => {
+        const snapshot =
+            await getDocs(sponsorsQuery);
 
-        const sponsor =
-            documentItem.data();
+        snapshot.forEach((documentItem) => {
 
-        table.innerHTML += `
-        <tr>
+            const sponsor =
+                documentItem.data();
 
-            <td class="border p-3">
-                ${sponsor.nom || ""}
-            </td>
+            table.innerHTML += `
+            <tr>
 
-            <td class="border p-3">
-                ${sponsor.contact || ""}
-            </td>
+                <td class="border p-3">
+                    ${sponsor.nom || ""}
+                </td>
 
-            <td class="border p-3">
-                ${sponsor.montant || ""}
-            </td>
+                <td class="border p-3">
+                    ${sponsor.contact || ""}
+                </td>
 
-            <td class="border p-3">
-                ${sponsor.dateSignature || ""}
-            </td>
+                <td class="border p-3">
+                    ${sponsor.montant || ""}
+                </td>
 
-            <td class="border p-3">
+                <td class="border p-3">
+                    ${sponsor.dateSignature || ""}
+                </td>
 
-                <button
-                onclick="supprimerSponsor('${documentItem.id}')"
-                class="bg-red-600 text-white px-3 py-1 rounded">
+                <td class="border p-3">
 
-                Supprimer
+                    <button
+                    onclick="supprimerSponsor('${documentItem.id}')"
+                    class="bg-red-600 text-white px-3 py-1 rounded">
 
-                </button>
+                    Supprimer
 
-            </td>
+                    </button>
 
-        </tr>
-        `;
+                </td>
 
-    });
+            </tr>
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Erreur chargement sponsors :",
+            error
+        );
+
+    }
 
 }
+
 
 /* ==========================
    SUPPRIMER SPONSOR
 ========================== */
 
 window.supprimerSponsor =
-async function (id) {
+async function(id) {
 
-    if (!confirm("Supprimer ce sponsor ?"))
-        return;
+    const confirmation =
+        confirm("Supprimer ce sponsor ?");
 
-    await deleteDoc(
-        doc(db, "sponsors", id)
-    );
+    if (!confirmation) return;
 
-    chargerSponsors();
+    try {
+
+        await deleteDoc(
+            doc(db, "sponsors", id)
+        );
+
+        chargerSponsors();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+
+    }
 
 };
 
-chargerSponsors();
+
+/* ==========================
+   CHARGEMENT INITIAL
+========================== */
+
+onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+
+        console.log(
+            "Utilisateur connecté :",
+            user.email
+        );
+
+        chargerSponsors();
+
+    } else {
+
+        window.location.href =
+            "login.html";
+
+    }
+
+});

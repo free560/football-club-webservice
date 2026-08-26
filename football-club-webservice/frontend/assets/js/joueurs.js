@@ -1,44 +1,61 @@
-import { db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 
 import {
     collection,
     addDoc,
     getDocs,
     deleteDoc,
-    doc
+    doc,
+    query,
+    where
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
 
 /* AJOUTER JOUEUR */
 
 const form = document.getElementById("joueurForm");
 
-if(form){
+if (form) {
 
-    form.addEventListener("submit", async (e)=>{
+    form.addEventListener("submit", async (e) => {
 
         e.preventDefault();
 
+        if (!auth.currentUser) {
+            alert("Veuillez vous reconnecter.");
+            return;
+        }
+
         const nom =
-        document.getElementById("nom").value;
+            document.getElementById("nom").value;
 
         const prenom =
-        document.getElementById("prenom").value;
+            document.getElementById("prenom").value;
 
         const poste =
-        document.getElementById("poste").value;
+            document.getElementById("poste").value;
 
         const numero =
-        document.getElementById("numero").value;
+            document.getElementById("numero").value;
 
-        try{
+        try {
 
             await addDoc(
-                collection(db,"joueurs"),
+                collection(db, "joueurs"),
                 {
                     nom,
                     prenom,
                     poste,
-                    numero
+                    numero,
+
+                    userId: auth.currentUser.uid,
+                    userEmail: auth.currentUser.email,
+
+                    createdAt: new Date()
                 }
             );
 
@@ -48,7 +65,9 @@ if(form){
 
             chargerJoueurs();
 
-        }catch(error){
+        } catch (error) {
+
+            console.error(error);
 
             alert(error.message);
 
@@ -58,84 +77,137 @@ if(form){
 
 }
 
-/* AFFICHER JOUEURS */
 
-async function chargerJoueurs(){
+/* AFFICHER LES JOUEURS DU MANAGER CONNECTÉ */
+
+async function chargerJoueurs() {
+
+    if (!auth.currentUser) return;
 
     const table =
-    document.getElementById("joueursTable");
+        document.getElementById("joueursTable");
 
-    if(!table) return;
+    if (!table) return;
 
     table.innerHTML = "";
 
-    const snapshot =
-    await getDocs(
-        collection(db,"joueurs")
-    );
+    try {
 
-    snapshot.forEach((documentItem)=>{
+        const joueursQuery = query(
+            collection(db, "joueurs"),
+            where(
+                "userId",
+                "==",
+                auth.currentUser.uid
+            )
+        );
 
-        const joueur =
-        documentItem.data();
+        const snapshot =
+            await getDocs(joueursQuery);
 
-        table.innerHTML += `
-        <tr>
+        snapshot.forEach((documentItem) => {
 
-            <td class="border p-2">
-                ${joueur.nom}
-            </td>
+            const joueur =
+                documentItem.data();
 
-            <td class="border p-2">
-                ${joueur.prenom}
-            </td>
+            table.innerHTML += `
+            <tr>
 
-            <td class="border p-2">
-                ${joueur.poste}
-            </td>
+                <td class="border p-2">
+                    ${joueur.nom}
+                </td>
 
-            <td class="border p-2">
-                ${joueur.numero}
-            </td>
+                <td class="border p-2">
+                    ${joueur.prenom}
+                </td>
 
-            <td class="border p-2">
+                <td class="border p-2">
+                    ${joueur.poste}
+                </td>
 
-                <button
-                onclick="supprimerJoueur('${documentItem.id}')"
-                class="bg-red-600 text-white px-3 py-1 rounded">
+                <td class="border p-2">
+                    ${joueur.numero}
+                </td>
 
-                Supprimer
+                <td class="border p-2">
 
-                </button>
+                    <button
+                    onclick="supprimerJoueur('${documentItem.id}')"
+                    class="bg-red-600 text-white px-3 py-1 rounded">
 
-            </td>
+                    Supprimer
 
-        </tr>
-        `;
+                    </button>
 
-    });
+                </td>
+
+            </tr>
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error("Erreur chargement joueurs :", error);
+
+    }
 
 }
 
-/* SUPPRIMER */
+
+/* SUPPRIMER JOUEUR */
 
 window.supprimerJoueur =
-async function(id){
+async function(id) {
 
     const confirmation =
-    confirm("Voulez-vous supprimer ce joueur ?");
+        confirm(
+            "Voulez-vous supprimer ce joueur ?"
+        );
 
-    if(!confirmation) return;
+    if (!confirmation) return;
 
-    await deleteDoc(
-        doc(db,"joueurs",id)
-    );
+    try {
 
-    chargerJoueurs();
+        await deleteDoc(
+            doc(db, "joueurs", id)
+        );
+
+        chargerJoueurs();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+
+    }
 
 }
+
 
 /* CHARGEMENT INITIAL */
 
-chargerJoueurs();
+onAuthStateChanged(auth, (user) => {
 
+    if (user) {
+
+        console.log(
+            "Utilisateur connecté :",
+            user.email
+        );
+
+        chargerJoueurs();
+
+    } else {
+
+        console.log(
+            "Aucun utilisateur connecté"
+        );
+
+        window.location.href =
+            "login.html";
+
+    }
+
+});

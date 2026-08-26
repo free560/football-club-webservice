@@ -1,14 +1,21 @@
-import { db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 
 import {
     collection,
     addDoc,
     getDocs,
     deleteDoc,
-    doc
+    doc,
+    query,
+    where
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-/*  AJOUTER STAFF */
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+
+/* AJOUTER STAFF */
 
 const form = document.getElementById("staffForm");
 
@@ -18,21 +25,37 @@ if (form) {
 
         e.preventDefault();
 
-        const nom = document.getElementById("nom").value.trim();
+        if (!auth.currentUser) {
+            alert("Veuillez vous reconnecter.");
+            return;
+        }
 
-        const prenom = document.getElementById("prenom").value.trim();
+        const nom =
+            document.getElementById("nom").value.trim();
 
-        const fonction = document.getElementById("fonction").value;
+        const prenom =
+            document.getElementById("prenom").value.trim();
 
-        const telephone = document.getElementById("telephone").value.trim();
+        const fonction =
+            document.getElementById("fonction").value;
 
-        const email = document.getElementById("email").value.trim();
+        const telephone =
+            document.getElementById("telephone").value.trim();
 
-        const salaire = document.getElementById("salaire").value;
+        const email =
+            document.getElementById("email").value.trim();
+
+        const salaire =
+            document.getElementById("salaire").value;
 
         if (!nom || !prenom || !fonction) {
-            alert("Veuillez remplir les champs obligatoires.");
+
+            alert(
+                "Veuillez remplir les champs obligatoires."
+            );
+
             return;
+
         }
 
         try {
@@ -46,11 +69,17 @@ if (form) {
                     telephone,
                     email,
                     salaire,
-                    createdAt: new Date().toISOString()
+
+                    userId: auth.currentUser.uid,
+                    userEmail: auth.currentUser.email,
+
+                    createdAt: new Date()
                 }
             );
 
-            alert("Membre du staff ajouté avec succès.");
+            alert(
+                "Membre du staff ajouté avec succès."
+            );
 
             form.reset();
 
@@ -68,9 +97,12 @@ if (form) {
 
 }
 
-/* AFFICHER STAFF */
+
+/* AFFICHER STAFF DU MANAGER CONNECTÉ */
 
 async function chargerStaff() {
+
+    if (!auth.currentUser) return;
 
     const table =
         document.getElementById("staffTable");
@@ -81,10 +113,17 @@ async function chargerStaff() {
 
     try {
 
+        const staffQuery = query(
+            collection(db, "staff"),
+            where(
+                "userId",
+                "==",
+                auth.currentUser.uid
+            )
+        );
+
         const snapshot =
-            await getDocs(
-                collection(db, "staff")
-            );
+            await getDocs(staffQuery);
 
         snapshot.forEach((documentItem) => {
 
@@ -137,18 +176,25 @@ async function chargerStaff() {
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Erreur chargement staff :",
+            error
+        );
 
     }
 
 }
 
+
 /* SUPPRIMER STAFF */
 
-window.supprimerStaff = async function (id) {
+window.supprimerStaff =
+async function(id) {
 
     const confirmation =
-        confirm("Voulez-vous supprimer ce membre du staff ?");
+        confirm(
+            "Voulez-vous supprimer ce membre du staff ?"
+        );
 
     if (!confirmation) return;
 
@@ -170,6 +216,25 @@ window.supprimerStaff = async function (id) {
 
 };
 
+
 /* CHARGEMENT INITIAL */
 
-chargerStaff();
+onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+
+        console.log(
+            "Utilisateur connecté :",
+            user.email
+        );
+
+        chargerStaff();
+
+    } else {
+
+        window.location.href =
+            "login.html";
+
+    }
+
+});

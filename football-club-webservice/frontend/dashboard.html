@@ -27,27 +27,89 @@
 
     <nav class="bg-blue-900 text-white shadow-lg">
 
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="container mx-auto px-6 py-4">
 
-            <h1 class="text-2xl font-bold">
-                ⚽ Football Club Management
-            </h1>
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-4">
 
-            <div class="space-x-4">
+                <!-- Logo -->
 
-                <a href="joueurs.html" class="hover:text-yellow-300">Joueurs</a>
+                <h1 class="text-2xl font-bold">
+                    Football Club Management
+                </h1>
 
-                <a href="staff.html" class="hover:text-yellow-300">Staff</a>
 
-                <a href="equipes.html" class="hover:text-yellow-300">Équipes</a>
+                <!-- Navigation -->
 
-                <a href="matchs.html" class="hover:text-yellow-300">Matchs</a>
+                <div class="flex flex-wrap justify-center gap-4">
 
-                <a href="stades.html" class="hover:text-yellow-300">Stades</a>
+                    <a href="dashboard.html"
+                        class="hover:text-yellow-300">
+                        Dashboard
+                    </a>
 
-                <a href="sponsors.html" class="hover:text-yellow-300">Sponsors</a>
+                    <a href="joueurs.html"
+                        class="hover:text-yellow-300">
+                        Joueurs
+                    </a>
 
-                <a href="finances.html" class="hover:text-yellow-300">Finances</a>
+                    <a href="staff.html"
+                        class="hover:text-yellow-300">
+                        Staff
+                    </a>
+
+                    <a href="equipes.html"
+                        class="hover:text-yellow-300">
+                        Équipes
+                    </a>
+
+                    <a href="matchs.html"
+                        class="hover:text-yellow-300">
+                        Matchs
+                    </a>
+
+                    <a href="stades.html"
+                        class="hover:text-yellow-300">
+                        Stades
+                    </a>
+
+                    <a href="sponsors.html"
+                        class="hover:text-yellow-300">
+                        Sponsors
+                    </a>
+
+                    <a href="finances.html"
+                        class="hover:text-yellow-300">
+                        Finances
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Utilisateur -->
+
+            <div class="mt-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+
+                <div class="text-sm">
+
+                    Connecté en tant que :
+
+                    <span id="userEmail"
+                        class="font-semibold">
+                        Chargement...
+                    </span>
+
+                </div>
+
+
+                <button
+                    id="logoutButton"
+                    class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-medium transition">
+
+                    Déconnexion
+
+                </button>
 
             </div>
 
@@ -61,7 +123,7 @@
 
         <h2 class="text-3xl font-bold mb-8">
 
-            📊 Tableau de Bord
+            Tableau de Bord
 
         </h2>
 
@@ -111,7 +173,26 @@
 
     </div>
 
+    <!-- MATCHS DISPONIBLES -->
+    <div class="bg-white mt-8 p-6 rounded-xl shadow">
+
+        <h2 class="text-2xl font-bold mb-5">
+
+            Matchs Disponibles
+
+        </h2>
+
+        <div
+            id="matchsDisponibles"
+            class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        </div>
+
+    </div>
+
     <script type="module" src="assets/js/dashboard.js"></script>
+    <script type="module" src="assets/js/auth-guard.js"></script>
+    <script type="module" src="assets/js/logout.js"></script>
 
 </body>
 

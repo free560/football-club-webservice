@@ -1,12 +1,18 @@
-import { db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 
 import {
     collection,
     addDoc,
     getDocs,
     deleteDoc,
-    doc
+    doc,
+    query,
+    where
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 /* ==========================
    AJOUTER OPÉRATION
@@ -19,6 +25,14 @@ if (form) {
     form.addEventListener("submit", async (e) => {
 
         e.preventDefault();
+
+        if (!auth.currentUser) {
+
+            alert("Veuillez vous reconnecter.");
+
+            return;
+
+        }
 
         const type =
             document.getElementById("type").value;
@@ -45,17 +59,25 @@ if (form) {
                     montant,
                     date,
                     description,
-                    createdAt: new Date().toISOString()
+
+                    userId: auth.currentUser.uid,
+                    userEmail: auth.currentUser.email,
+
+                    createdAt: new Date()
                 }
             );
 
-            alert("Opération enregistrée avec succès");
+            alert(
+                "Opération enregistrée avec succès"
+            );
 
             form.reset();
 
             chargerFinances();
 
         } catch (error) {
+
+            console.error(error);
 
             alert(error.message);
 
@@ -65,11 +87,14 @@ if (form) {
 
 }
 
+
 /* ==========================
    AFFICHER OPÉRATIONS
 ========================== */
 
 async function chargerFinances() {
+
+    if (!auth.currentUser) return;
 
     const table =
         document.getElementById("financesTable");
@@ -78,74 +103,130 @@ async function chargerFinances() {
 
     table.innerHTML = "";
 
-    const snapshot =
-        await getDocs(
-            collection(db, "finances")
+    try {
+
+        const financesQuery = query(
+            collection(db, "finances"),
+            where(
+                "userId",
+                "==",
+                auth.currentUser.uid
+            )
         );
 
-    snapshot.forEach((documentItem) => {
+        const snapshot =
+            await getDocs(financesQuery);
 
-        const finance =
-            documentItem.data();
+        snapshot.forEach((documentItem) => {
 
-        table.innerHTML += `
-        <tr>
+            const finance =
+                documentItem.data();
 
-            <td class="border p-3">
-                ${finance.type || ""}
-            </td>
+            table.innerHTML += `
+            <tr>
 
-            <td class="border p-3">
-                ${finance.categorie || ""}
-            </td>
+                <td class="border p-3">
+                    ${finance.type || ""}
+                </td>
 
-            <td class="border p-3">
-                ${finance.montant || ""}
-            </td>
+                <td class="border p-3">
+                    ${finance.categorie || ""}
+                </td>
 
-            <td class="border p-3">
-                ${finance.date || ""}
-            </td>
+                <td class="border p-3">
+                    ${finance.montant || ""}
+                </td>
 
-            <td class="border p-3">
-                ${finance.description || ""}
-            </td>
+                <td class="border p-3">
+                    ${finance.date || ""}
+                </td>
 
-            <td class="border p-3">
+                <td class="border p-3">
+                    ${finance.description || ""}
+                </td>
 
-                <button
-                onclick="supprimerFinance('${documentItem.id}')"
-                class="bg-red-600 text-white px-3 py-1 rounded">
+                <td class="border p-3">
 
-                Supprimer
+                    <button
+                    onclick="supprimerFinance('${documentItem.id}')"
+                    class="bg-red-600 text-white px-3 py-1 rounded">
 
-                </button>
+                    Supprimer
 
-            </td>
+                    </button>
 
-        </tr>
-        `;
+                </td>
 
-    });
+            </tr>
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Erreur chargement finances :",
+            error
+        );
+
+    }
 
 }
+
 
 /* ==========================
    SUPPRIMER OPÉRATION
 ========================== */
 
 window.supprimerFinance =
-async function (id) {
+async function(id) {
 
-    if (!confirm("Supprimer cette opération ?"))
-        return;
+    const confirmation =
+        confirm(
+            "Supprimer cette opération ?"
+        );
 
-    await deleteDoc(
-        doc(db, "finances", id)
-    );
+    if (!confirmation) return;
 
-    chargerFinances();
+    try {
+
+        await deleteDoc(
+            doc(db, "finances", id)
+        );
+
+        chargerFinances();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+
+    }
 
 };
 
-chargerFinances();
+
+/* ==========================
+   CHARGEMENT INITIAL
+========================== */
+
+onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+
+        console.log(
+            "Utilisateur connecté :",
+            user.email
+        );
+
+        chargerFinances();
+
+    } else {
+
+        window.location.href =
+            "login.html";
+
+    }
+
+});

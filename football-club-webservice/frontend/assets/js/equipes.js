@@ -1,12 +1,18 @@
-import { db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 
 import {
     collection,
     addDoc,
     getDocs,
     deleteDoc,
-    doc
+    doc,
+    query,
+    where
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 /* ==========================
    AJOUTER ÉQUIPE
@@ -19,6 +25,11 @@ if (form) {
     form.addEventListener("submit", async (e) => {
 
         e.preventDefault();
+
+        if (!auth.currentUser) {
+            alert("Veuillez vous reconnecter.");
+            return;
+        }
 
         const nom =
             document.getElementById("nom").value.trim();
@@ -37,7 +48,9 @@ if (form) {
 
         if (!nom || !ville) {
 
-            alert("Veuillez remplir les champs obligatoires.");
+            alert(
+                "Veuillez remplir les champs obligatoires."
+            );
 
             return;
         }
@@ -52,7 +65,11 @@ if (form) {
                     dateCreation,
                     categorie,
                     description,
-                    createdAt: new Date().toISOString()
+
+                    userId: auth.currentUser.uid,
+                    userEmail: auth.currentUser.email,
+
+                    createdAt: new Date()
                 }
             );
 
@@ -74,11 +91,14 @@ if (form) {
 
 }
 
+
 /* ==========================
    AFFICHER ÉQUIPES
 ========================== */
 
 async function chargerEquipes() {
+
+    if (!auth.currentUser) return;
 
     const table =
         document.getElementById("equipesTable");
@@ -89,10 +109,17 @@ async function chargerEquipes() {
 
     try {
 
+        const equipesQuery = query(
+            collection(db, "equipes"),
+            where(
+                "userId",
+                "==",
+                auth.currentUser.uid
+            )
+        );
+
         const snapshot =
-            await getDocs(
-                collection(db, "equipes")
-            );
+            await getDocs(equipesQuery);
 
         snapshot.forEach((documentItem) => {
 
@@ -141,20 +168,27 @@ async function chargerEquipes() {
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Erreur chargement équipes :",
+            error
+        );
 
     }
 
 }
 
+
 /* ==========================
    SUPPRIMER ÉQUIPE
 ========================== */
 
-window.supprimerEquipe = async function (id) {
+window.supprimerEquipe =
+async function(id) {
 
     const confirmation =
-        confirm("Voulez-vous supprimer cette équipe ?");
+        confirm(
+            "Voulez-vous supprimer cette équipe ?"
+        );
 
     if (!confirmation) return;
 
@@ -176,6 +210,27 @@ window.supprimerEquipe = async function (id) {
 
 };
 
-/* CHARGEMENT INITIAL */
 
-chargerEquipes();
+/* ==========================
+   CHARGEMENT INITIAL
+========================== */
+
+onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+
+        console.log(
+            "Utilisateur connecté :",
+            user.email
+        );
+
+        chargerEquipes();
+
+    } else {
+
+        window.location.href =
+            "login.html";
+
+    }
+
+});
