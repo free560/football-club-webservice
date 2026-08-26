@@ -15,77 +15,175 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 
-/* AJOUTER JOUEUR */
+/* =========================
+   GOOGLE SHEETS
+========================= */
 
-const form = document.getElementById("joueurForm");
+async function envoyerVersGoogleSheets(data) {
+
+    const WEB_APP_URL =
+        "https://script.google.com/macros/s/AKfycbycOCoipSrBhRPRse08Hu-A3dCxXgZKp99HhGEq3BUH9tBcyUzJmL776QKqlI6X_JTe/exec";
+
+    try {
+
+        const response = await fetch(
+            WEB_APP_URL,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }
+        );
+
+        const result = await response.text();
+
+        console.log(
+            "Google Sheets OK :",
+            result
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Erreur Google Sheets :",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================
+   AJOUTER JOUEUR
+========================= */
+
+const form =
+    document.getElementById(
+        "joueurForm"
+    );
 
 if (form) {
 
-    form.addEventListener("submit", async (e) => {
+    form.addEventListener(
+        "submit",
+        async (e) => {
 
-        e.preventDefault();
+            e.preventDefault();
 
-        if (!auth.currentUser) {
-            alert("Veuillez vous reconnecter.");
-            return;
-        }
+            if (!auth.currentUser) {
 
-        const nom =
-            document.getElementById("nom").value;
+                alert(
+                    "Veuillez vous reconnecter."
+                );
 
-        const prenom =
-            document.getElementById("prenom").value;
+                return;
 
-        const poste =
-            document.getElementById("poste").value;
+            }
 
-        const numero =
-            document.getElementById("numero").value;
+            const nom =
+                document.getElementById(
+                    "nom"
+                ).value;
 
-        try {
+            const prenom =
+                document.getElementById(
+                    "prenom"
+                ).value;
 
-            await addDoc(
-                collection(db, "joueurs"),
-                {
+            const poste =
+                document.getElementById(
+                    "poste"
+                ).value;
+
+            const numero =
+                document.getElementById(
+                    "numero"
+                ).value;
+
+            try {
+
+                /* ENREGISTREMENT FIREBASE */
+
+                await addDoc(
+                    collection(
+                        db,
+                        "joueurs"
+                    ),
+                    {
+                        nom,
+                        prenom,
+                        poste,
+                        numero,
+
+                        userId:
+                            auth.currentUser.uid,
+
+                        userEmail:
+                            auth.currentUser.email,
+
+                        createdAt:
+                            new Date()
+                    }
+                );
+
+
+                /* ENREGISTREMENT GOOGLE SHEETS */
+
+                await envoyerVersGoogleSheets({
                     nom,
                     prenom,
                     poste,
                     numero,
 
-                    userId: auth.currentUser.uid,
-                    userEmail: auth.currentUser.email,
+                    userId:
+                        auth.currentUser.uid,
 
-                    createdAt: new Date()
-                }
-            );
+                    userEmail:
+                        auth.currentUser.email
+                });
 
-            alert("Joueur ajouté avec succès");
 
-            form.reset();
+                alert(
+                    "Joueur ajouté avec succès"
+                );
 
-            chargerJoueurs();
+                form.reset();
 
-        } catch (error) {
+                chargerJoueurs();
 
-            console.error(error);
+            } catch (error) {
 
-            alert(error.message);
+                console.error(
+                    error
+                );
+
+                alert(
+                    error.message
+                );
+
+            }
 
         }
-
-    });
+    );
 
 }
 
 
-/* AFFICHER LES JOUEURS DU MANAGER CONNECTÉ */
+/* =========================
+   AFFICHER JOUEURS
+========================= */
 
 async function chargerJoueurs() {
 
     if (!auth.currentUser) return;
 
     const table =
-        document.getElementById("joueursTable");
+        document.getElementById(
+            "joueursTable"
+        );
 
     if (!table) return;
 
@@ -93,69 +191,82 @@ async function chargerJoueurs() {
 
     try {
 
-        const joueursQuery = query(
-            collection(db, "joueurs"),
-            where(
-                "userId",
-                "==",
-                auth.currentUser.uid
-            )
-        );
+        const joueursQuery =
+            query(
+                collection(
+                    db,
+                    "joueurs"
+                ),
+                where(
+                    "userId",
+                    "==",
+                    auth.currentUser.uid
+                )
+            );
 
         const snapshot =
-            await getDocs(joueursQuery);
+            await getDocs(
+                joueursQuery
+            );
 
-        snapshot.forEach((documentItem) => {
+        snapshot.forEach(
+            (documentItem) => {
 
-            const joueur =
-                documentItem.data();
+                const joueur =
+                    documentItem.data();
 
-            table.innerHTML += `
-            <tr>
+                table.innerHTML += `
+                <tr>
 
-                <td class="border p-2">
-                    ${joueur.nom}
-                </td>
+                    <td class="border p-2">
+                        ${joueur.nom}
+                    </td>
 
-                <td class="border p-2">
-                    ${joueur.prenom}
-                </td>
+                    <td class="border p-2">
+                        ${joueur.prenom}
+                    </td>
 
-                <td class="border p-2">
-                    ${joueur.poste}
-                </td>
+                    <td class="border p-2">
+                        ${joueur.poste}
+                    </td>
 
-                <td class="border p-2">
-                    ${joueur.numero}
-                </td>
+                    <td class="border p-2">
+                        ${joueur.numero}
+                    </td>
 
-                <td class="border p-2">
+                    <td class="border p-2">
 
-                    <button
-                    onclick="supprimerJoueur('${documentItem.id}')"
-                    class="bg-red-600 text-white px-3 py-1 rounded">
+                        <button
+                        onclick="supprimerJoueur('${documentItem.id}')"
+                        class="bg-red-600 text-white px-3 py-1 rounded">
 
-                    Supprimer
+                        Supprimer
 
-                    </button>
+                        </button>
 
-                </td>
+                    </td>
 
-            </tr>
-            `;
+                </tr>
+                `;
 
-        });
+            }
+        );
 
     } catch (error) {
 
-        console.error("Erreur chargement joueurs :", error);
+        console.error(
+            "Erreur chargement joueurs :",
+            error
+        );
 
     }
 
 }
 
 
-/* SUPPRIMER JOUEUR */
+/* =========================
+   SUPPRIMER JOUEUR
+========================= */
 
 window.supprimerJoueur =
 async function(id) {
@@ -170,44 +281,57 @@ async function(id) {
     try {
 
         await deleteDoc(
-            doc(db, "joueurs", id)
+            doc(
+                db,
+                "joueurs",
+                id
+            )
         );
 
         chargerJoueurs();
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            error
+        );
 
-        alert(error.message);
+        alert(
+            error.message
+        );
 
     }
 
 }
 
 
-/* CHARGEMENT INITIAL */
+/* =========================
+   AUTHENTIFICATION
+========================= */
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(
+    auth,
+    (user) => {
 
-    if (user) {
+        if (user) {
 
-        console.log(
-            "Utilisateur connecté :",
-            user.email
-        );
+            console.log(
+                "Utilisateur connecté :",
+                user.email
+            );
 
-        chargerJoueurs();
+            chargerJoueurs();
 
-    } else {
+        } else {
 
-        console.log(
-            "Aucun utilisateur connecté"
-        );
+            console.log(
+                "Aucun utilisateur connecté"
+            );
 
-        window.location.href =
-            "login.html";
+            window.location.href =
+                "login.html";
+
+        }
 
     }
-
-});
+);

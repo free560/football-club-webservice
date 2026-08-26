@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services & Intégrations - Football Club</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pitch: {
+                            950: '#08251A',
+                            900: '#0E3524',
+                            800: '#145C3F',
+                            700: '#1A6E4B',
+                            600: '#1F7A4D',
+                            500: '#2E9962',
+                        },
+                        gold: {
+                            400: '#F0C94A',
+                            500: '#E8B923',
+                            600: '#C89412',
+                        },
+                        chalk: {
+                            50: '#F5F7F1',
+                            100: '#ECF0E6',
+                        },
+                        ink: {
+                            900: '#12241C',
+                            600: '#4B5D53',
+                            400: '#7C8B82',
+                        }
+                    },
+                    fontFamily: {
+                        display: ['"Bebas Neue"', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                        mono: ['"IBM Plex Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F5F7F1;
+            font-family: 'Inter', sans-serif;
+            color: #12241C;
+            background-image:
+                repeating-linear-gradient(0deg, rgba(20,92,63,0.05) 0px, rgba(20,92,63,0.05) 1px, transparent 1px, transparent 96px),
+                repeating-linear-gradient(90deg, rgba(20,92,63,0.05) 0px, rgba(20,92,63,0.05) 1px, transparent 1px, transparent 96px);
+        }
+
+        .eyebrow {
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-size: 0.68rem;
+            font-weight: 600;
+        }
+
+        .display-heading {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 0.02em;
+        }
+
+        .stat-digit {
+            font-family: 'IBM Plex Mono', monospace;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Corner flag notch on each service card */
+        .service-card {
+            position: relative;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            box-shadow: 0 1px 2px rgba(18,36,28,0.06);
+        }
+
+        .service-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 22px 22px 0 0;
+            border-color: #E8B923 transparent transparent transparent;
+            border-top-left-radius: 1rem;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 30px -14px rgba(14,53,36,0.35);
+        }
+
+        .icon-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 3.25rem;
+            height: 3.25rem;
+            border-radius: 0.9rem;
+            background: linear-gradient(145deg, #145C3F, #0E3524);
+            box-shadow: inset 0 0 0 2px rgba(232,185,35,0.55);
+            font-size: 1.5rem;
+        }
+
+        .pitch-divider {
+            height: 3px;
+            background-image: repeating-linear-gradient(90deg, rgba(232,185,35,0.8) 0 14px, transparent 14px 26px);
+        }
+
+        .scoreboard {
+            background: radial-gradient(circle at 20% 0%, #145C3F 0%, #0E3524 55%, #08251A 100%);
+        }
+
+        .scoreboard-tile {
+            background: rgba(8,37,26,0.55);
+            border: 1px solid rgba(232,185,35,0.25);
+        }
+
+        input:focus, select:focus, textarea:focus, button:focus-visible {
+            outline: 2px solid #E8B923;
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .service-card, .service-card:hover { transition: none; transform: none; }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- NAVBAR -->
+    <nav class="bg-pitch-950 text-white shadow-lg relative">
+        <div class="max-w-7xl mx-auto px-6 py-5">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+
+                <div class="flex items-center gap-3">
+                    <div>
+                        <h1 class="display-heading text-3xl leading-none tracking-wide">
+                            FOOTBALL CLUB
+                        </h1>
+                        <p class="eyebrow text-gold-400 mt-1">
+                            Services &amp; Intégrations
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <a href="dashboard.html"
+                       class="px-4 py-2 rounded-lg bg-pitch-800 hover:bg-pitch-700 text-sm font-semibold transition-colors">
+                        Dashboard
+                    </a>
+
+                    <button id="logoutBtn"
+                            class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-sm font-semibold transition-colors">
+                        Déconnexion
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        <div class="pitch-divider"></div>
+    </nav>
+
+    <!-- CONTENU -->
+    <main class="max-w-7xl mx-auto px-6 py-10">
+
+        <div class="mb-8">
+            <p class="eyebrow text-pitch-700">Panneau de contrôle</p>
+            <h2 class="display-heading text-4xl text-ink-900 tracking-wide mt-1">
+                SERVICES &amp; INTÉGRATIONS
+            </h2>
+            <p class="text-ink-600 mt-2">
+                Consultez les services externes connectés à votre plateforme.
+            </p>
+        </div>
+
+        <!-- SERVICES -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- METEO -->
+            <div class="service-card bg-white rounded-2xl shadow-md p-6 border border-ink-900/5">
+
+                <div class="flex items-center justify-between mb-5">
+                    <div>
+                        <p class="eyebrow text-pitch-700 mb-1">Terrain &amp; conditions</p>
+                        <h3 class="text-xl font-bold text-slate-800">
+                            Météo
+                        </h3>
+                        <p class="text-slate-500 text-sm">
+                            Conditions météorologiques
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-chalk-50 rounded-xl p-5 border border-ink-900/5">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm text-slate-500">
+                                Bujumbura
+                            </p>
+                            <p id="temperature"
+                               class="stat-digit text-4xl font-bold text-pitch-900">
+                                --°C
+                            </p>
+                        </div>
+                        <div>
+                            <p id="weatherDescription"
+                               class="text-slate-600 text-right">
+                                Chargement...
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mt-5">
+                        <div>
+                            <p class="text-xs text-slate-500">
+                                Humidité
+                            </p>
+                            <p id="humidity"
+                               class="stat-digit font-semibold text-ink-900">
+                                -- %
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500">
+                                Vent
+                            </p>
+                            <p id="windSpeed"
+                               class="stat-digit font-semibold text-ink-900">
+                                -- km/h
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="refreshWeather"
+                        class="mt-5 w-full bg-pitch-700 hover:bg-pitch-800 text-white py-3 rounded-lg font-semibold transition-colors">
+                    Actualiser la météo
+                </button>
+            </div>
+
+            <!-- GOOGLE SHEETS -->
+            <div class="service-card bg-white rounded-2xl shadow-md p-6 border border-ink-900/5">
+
+                <div class="flex items-center justify-between mb-5">
+                    <div>
+                        <p class="eyebrow text-pitch-700 mb-1">Base de données club</p>
+                        <h3 class="text-xl font-bold text-slate-800">
+                            Google Sheets
+                        </h3>
+                        <p class="text-slate-500 text-sm">
+                            Données du club
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-chalk-50 rounded-xl p-5 border border-ink-900/5">
+                    <div class="flex justify-between">
+                        <div>
+                            <p class="text-sm text-slate-500">
+                                Joueurs
+                            </p>
+                            <p id="playersCount"
+                               class="stat-digit text-4xl font-bold text-pitch-900">
+                                --
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500">
+                                Matchs
+                            </p>
+                            <p id="matchesCount"
+                               class="stat-digit text-4xl font-bold text-pitch-900">
+                                --
+                            </p>
+                        </div>
+                    </div>
+
+                    <p id="sheetsStatus"
+                       class="text-sm text-slate-500 mt-5">
+                        Chargement des données...
+                    </p>
+                </div>
+
+                <button id="openSheets"
+                        class="mt-5 w-full bg-pitch-600 hover:bg-pitch-700 text-white py-3 rounded-lg font-semibold transition-colors">
+                    Consulter Google Sheets
+                </button>
+            </div>
+
+            <!-- LUMICASH -->
+            <div class="service-card bg-white rounded-2xl shadow-md p-6 border border-ink-900/5">
+
+                <div class="flex items-center justify-between mb-5">
+                    <div>
+                        <p class="eyebrow text-gold-600 mb-1">Paiement sécurisé</p>
+                        <h3 class="text-xl font-bold text-slate-800">
+                            LumiCash
+                        </h3>
+                        <p class="text-slate-500 text-sm">
+                            Paiement du club
+                        </p>
+                    </div>
+                </div>
+
+                <form id="paymentForm">
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2 text-ink-900">
+                            Nom du payeur
+                        </label>
+                        <input
+                            id="payerName"
+                            type="text"
+                            required
+                            class="w-full border border-ink-900/15 rounded-lg px-4 py-3 focus:border-gold-500"
+                            placeholder="Votre nom">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2 text-ink-900">
+                            Numéro LumiCash
+                        </label>
+                        <input
+                            id="phoneNumber"
+                            type="tel"
+                            required
+                            class="w-full border border-ink-900/15 rounded-lg px-4 py-3 focus:border-gold-500"
+                            placeholder="Ex: 79xxxxxx">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2 text-ink-900">
+                            Montant
+                        </label>
+                        <input
+                            id="paymentAmount"
+                            type="number"
+                            min="1"
+                            required
+                            class="w-full border border-ink-900/15 rounded-lg px-4 py-3 focus:border-gold-500"
+                            placeholder="Montant en BIF">
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium mb-2 text-ink-900">
+                            Motif
+                        </label>
+                        <select
+                            id="paymentReason"
+                            class="w-full border border-ink-900/15 rounded-lg px-4 py-3 focus:border-gold-500">
+                            <option value="cotisation">Cotisation</option>
+                            <option value="inscription">Inscription</option>
+                            <option value="equipement">Équipement</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="w-full bg-gold-500 hover:bg-gold-600 text-pitch-950 font-bold py-3 rounded-lg transition-colors">
+                        Effectuer le paiement
+                    </button>
+                </form>
+
+                <div id="paymentMessage"
+                     class="mt-4 text-sm">
+                </div>
+            </div>
+
+            <!-- WHATSAPP -->
+            <div class="service-card bg-white rounded-2xl shadow-md p-6 border border-ink-900/5">
+
+                <div class="flex items-center justify-between mb-5">
+                    <div>
+                        <p class="eyebrow text-pitch-700 mb-1">Messagerie</p>
+                        <h3 class="text-xl font-bold text-slate-800">
+                            WhatsApp
+                        </h3>
+                        <p class="text-slate-500 text-sm">
+                            Contacter le club
+                        </p>
+                    </div>
+                </div>
+
+                <form id="whatsappForm">
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2 text-ink-900">
+                            Nom
+                        </label>
+                        <input
+                            id="whatsappName"
+                            type="text"
+                            required
+                            class="w-full border border-ink-900/15 rounded-lg px-4 py-3 focus:border-gold-500"
+                            placeholder="Votre nom">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2 text-ink-900">
+                            Message
+                        </label>
+                        <textarea
+                            id="whatsappMessage"
+                            required
+                            rows="4"
+                            class="w-full border border-ink-900/15 rounded-lg px-4 py-3 focus:border-gold-500"
+                            placeholder="Votre message..."></textarea>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="w-full bg-pitch-600 hover:bg-pitch-700 text-white py-3 rounded-lg font-semibold transition-colors">
+                        Envoyer sur WhatsApp
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- STATISTIQUES -->
+        <div class="mt-8 scoreboard rounded-2xl shadow-md p-6 border border-gold-500/20">
+
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="display-heading text-2xl text-white tracking-wide">
+                    STATISTIQUES DU CLUB
+                </h3>
+                <span class="eyebrow text-gold-400">Live</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <div class="scoreboard-tile rounded-xl p-6 text-center">
+                    <p class="text-slate-300 text-sm">
+                        Joueurs
+                    </p>
+                    <p id="statPlayers"
+                       class="stat-digit text-4xl font-bold text-gold-400">
+                        --
+                    </p>
+                </div>
+
+                <div class="scoreboard-tile rounded-xl p-6 text-center">
+                    <p class="text-slate-300 text-sm">
+                        Matchs
+                    </p>
+                    <p id="statMatches"
+                       class="stat-digit text-4xl font-bold text-gold-400">
+                        --
+                    </p>
+                </div>
+
+                <div class="scoreboard-tile rounded-xl p-6 text-center">
+                    <p class="text-slate-300 text-sm">
+                        Victoires
+                    </p>
+                    <p id="statWins"
+                       class="stat-digit text-4xl font-bold text-gold-400">
+                        --
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- JAVASCRIPT -->
+    <script type="module" src="./assets/js/services.js"></script>
+
+</body>
+</html>
