@@ -256,6 +256,7 @@ playerForm?.addEventListener("submit", async (e) => {
     try {
         await fetch("https://script.google.com/macros/s/AKfycbwCasgkAu0KmoHn1MIPEXXb1x_sN2Ud5QCAhsd2OrK7HHqpfOf3UcyLFzzcoewRI_zb/exec", {
             method: "POST",
+            mode: "no-cors",
             body: JSON.stringify(data)
         });
 
