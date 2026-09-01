@@ -248,7 +248,7 @@ playerForm?.addEventListener("submit", async (e) => {
 
     const data = {
         nom: document.getElementById("playerName").value,
-        // age: document.getElementById("playerAge").value,
+        age: document.getElementById("playerAge").value,
         poste: document.getElementById("playerPosition").value,
         numero: document.getElementById("playerNumber").value
     };
