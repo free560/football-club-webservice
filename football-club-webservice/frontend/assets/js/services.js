@@ -254,7 +254,7 @@ playerForm?.addEventListener("submit", async (e) => {
     };
 
     try {
-        await fetch("VOTRE_URL_GOOGLE_APPS_SCRIPT", {
+        await fetch("https://script.google.com/macros/s/AKfycbycOCoipSrBhRPRse08Hu-A3dCxXgZKp99HhGEq3BUH9tBcyUzJmL776QKqlI6X_JTe/exec", {
             method: "POST",
             body: JSON.stringify(data)
         });
