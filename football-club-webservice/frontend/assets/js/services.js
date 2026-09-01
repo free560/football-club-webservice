@@ -269,3 +269,4 @@ playerForm?.addEventListener("submit", async (e) => {
             "<span class='text-red-600'>Erreur lors de l'enregistrement.</span>";
     }
 });
+console.log(data);
