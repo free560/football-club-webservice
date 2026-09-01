@@ -252,7 +252,7 @@ playerForm?.addEventListener("submit", async (e) => {
         poste: document.getElementById("playerPosition").value,
         numero: document.getElementById("playerNumber").value
     };
-    console.log(data);
+    console.log("Données envoyées :", data);
     
     try {
         await fetch("https://script.google.com/macros/s/AKfycbycOCoipSrBhRPRse08Hu-A3dCxXgZKp99HhGEq3BUH9tBcyUzJmL776QKqlI6X_JTe/exec", {
