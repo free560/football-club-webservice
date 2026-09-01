@@ -310,59 +310,27 @@
                         class="w-full bg-pitch-700 hover:bg-pitch-800 text-white py-3 rounded-lg font-semibold">
                         Enregistrer le joueur
                     </button>
+                    <div class="flex justify-between">
+                        <div>
+                            <p class="eyebrow text-pitch-700 mb-1">Base de données club</p>
+                            <h3 class="text-xl font-bold text-slate-800">
+                                Google Sheets
+                            </h3>
+                            <p class="text-slate-500 text-sm">
+                                Données du club
+                            </p>
+                        </div>
+                        <button id="openSheets"
+                                class="mt-5 w-full bg-pitch-600 hover:bg-pitch-700 text-white py-3 rounded-lg font-semibold transition-colors">
+                            Consulter Google Sheets
+                        </button>
+                    </div>
                 </form>
             
                 <div id="playerMessage" class="mt-4 text-sm"></div>
             
             </div>
-            <div class="service-card bg-white rounded-2xl shadow-md p-6 border border-ink-900/5">
-
-                <div class="flex items-center justify-between mb-5">
-                    <div>
-                        <p class="eyebrow text-pitch-700 mb-1">Base de données club</p>
-                        <h3 class="text-xl font-bold text-slate-800">
-                            Google Sheets
-                        </h3>
-                        <p class="text-slate-500 text-sm">
-                            Données du club
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-chalk-50 rounded-xl p-5 border border-ink-900/5">
-                    <div class="flex justify-between">
-                        <div>
-                            <p class="text-sm text-slate-500">
-                                Joueurs
-                            </p>
-                            <p id="playersCount"
-                               class="stat-digit text-4xl font-bold text-pitch-900">
-                                --
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-slate-500">
-                                Matchs
-                            </p>
-                            <p id="matchesCount"
-                               class="stat-digit text-4xl font-bold text-pitch-900">
-                                --
-                            </p>
-                        </div>
-                    </div>
-
-                    <p id="sheetsStatus"
-                       class="text-sm text-slate-500 mt-5">
-                        Chargement des données...
-                    </p>
-                </div>
-
-                <button id="openSheets"
-                        class="mt-5 w-full bg-pitch-600 hover:bg-pitch-700 text-white py-3 rounded-lg font-semibold transition-colors">
-                    Consulter Google Sheets
-                </button>
-            </div>
-
+            
             <!-- LUMICASH -->
             <div class="service-card bg-white rounded-2xl shadow-md p-6 border border-ink-900/5">
 
