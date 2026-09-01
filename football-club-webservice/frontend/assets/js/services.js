@@ -240,3 +240,32 @@ if (logoutBtn) {
     );
 
 }
+
+const playerForm = document.getElementById("playerForm");
+
+playerForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const data = {
+        nom: document.getElementById("playerName").value,
+        age: document.getElementById("playerAge").value,
+        poste: document.getElementById("playerPosition").value,
+        numero: document.getElementById("playerNumber").value
+    };
+
+    try {
+        await fetch("VOTRE_URL_GOOGLE_APPS_SCRIPT", {
+            method: "POST",
+            body: JSON.stringify(data)
+        });
+
+        document.getElementById("playerMessage").innerHTML =
+            "<span class='text-green-600'>Joueur enregistré avec succès.</span>";
+
+        playerForm.reset();
+
+    } catch (error) {
+        document.getElementById("playerMessage").innerHTML =
+            "<span class='text-red-600'>Erreur lors de l'enregistrement.</span>";
+    }
+});
