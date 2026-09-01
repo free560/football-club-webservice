@@ -233,7 +233,88 @@
                 </button>
             </div>
 
+            
+            
             <!-- GOOGLE SHEETS -->
+            <!-- ENREGISTRER UN JOUEUR -->
+            <div class="service-card bg-white rounded-2xl shadow-md p-6 border border-ink-900/5">
+            
+                <div class="flex items-center justify-between mb-5">
+                    <div>
+                        <p class="eyebrow text-pitch-700 mb-1">Gestion des joueurs</p>
+                        <h3 class="text-xl font-bold text-slate-800">
+                            Enregistrer un Joueur
+                        </h3>
+                        <p class="text-slate-500 text-sm">
+                            Ajout d'un nouveau joueur
+                        </p>
+                    </div>
+                </div>
+            
+                <form id="playerForm">
+            
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">
+                            Nom complet
+                        </label>
+                        <input
+                            type="text"
+                            id="playerName"
+                            required
+                            class="w-full border border-ink-900/15 rounded-lg px-4 py-3"
+                            placeholder="Nom du joueur">
+                    </div>
+            
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">
+                            Âge
+                        </label>
+                        <input
+                            type="number"
+                            id="playerAge"
+                            required
+                            class="w-full border border-ink-900/15 rounded-lg px-4 py-3"
+                            placeholder="Âge">
+                    </div>
+            
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">
+                            Poste
+                        </label>
+                        <select
+                            id="playerPosition"
+                            required
+                            class="w-full border border-ink-900/15 rounded-lg px-4 py-3">
+                            <option value="">Choisir</option>
+                            <option>Gardien</option>
+                            <option>Défenseur</option>
+                            <option>Milieu</option>
+                            <option>Attaquant</option>
+                        </select>
+                    </div>
+            
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium mb-2">
+                            Numéro
+                        </label>
+                        <input
+                            type="number"
+                            id="playerNumber"
+                            required
+                            class="w-full border border-ink-900/15 rounded-lg px-4 py-3"
+                            placeholder="Numéro du maillot">
+                    </div>
+            
+                    <button
+                        type="submit"
+                        class="w-full bg-pitch-700 hover:bg-pitch-800 text-white py-3 rounded-lg font-semibold">
+                        Enregistrer le joueur
+                    </button>
+                </form>
+            
+                <div id="playerMessage" class="mt-4 text-sm"></div>
+            
+            </div>
             <div class="service-card bg-white rounded-2xl shadow-md p-6 border border-ink-900/5">
 
                 <div class="flex items-center justify-between mb-5">
